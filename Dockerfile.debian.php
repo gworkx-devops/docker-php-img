@@ -36,9 +36,9 @@ RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # add GEOIP databases
 #
-ADD http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz /usr/share/GeoIP/GeoLiteCity.dat.gz
-RUN gunzip /usr/share/GeoIP/GeoLiteCity.dat.gz && chmod +r /usr/share/GeoIP/GeoLiteCity.dat \
-    && ln -s /usr/share/GeoIP/GeoLiteCity.dat /usr/share/GeoIP/GeoIPCity.dat
+#ADD http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz /usr/share/GeoIP/GeoLiteCity.dat.gz
+#RUN gunzip /usr/share/GeoIP/GeoLiteCity.dat.gz && chmod +r /usr/share/GeoIP/GeoLiteCity.dat \
+#    && ln -s /usr/share/GeoIP/GeoLiteCity.dat /usr/share/GeoIP/GeoIPCity.dat
 
 # setup runtime php
 #
