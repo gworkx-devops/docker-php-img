@@ -36,7 +36,7 @@ RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # add GEOIP databases
 #
-#ADD http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz /usr/share/GeoIP/GeoLiteCity.dat.gz
+#ADD https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
 #RUN gunzip /usr/share/GeoIP/GeoLiteCity.dat.gz && chmod +r /usr/share/GeoIP/GeoLiteCity.dat \
 #    && ln -s /usr/share/GeoIP/GeoLiteCity.dat /usr/share/GeoIP/GeoIPCity.dat
 
@@ -54,6 +54,9 @@ RUN chmod +x /usr/local/bin/composer
 
 # Install PHPUnit
 RUN composer require --dev phpunit/phpunit:"^5.7|^6.0"
+
+# Install GEOIP databases
+RUN composer require geoip2/geoip2:~2.0
 
 # setup runtime apache server
 #
