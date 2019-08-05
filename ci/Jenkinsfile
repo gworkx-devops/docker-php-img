@@ -1,0 +1,25 @@
+pipeline {
+    agent { label 'docker' }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '5'))
+    }
+
+    stages {
+        stage('Build & Tag') {
+            steps {
+                docker image build -f ../Dockerfile.debian.php -t gworkx/img:php-latest ../.
+            }
+        }
+
+        stage('Publish') {
+              when {
+                branch 'master'
+              }
+              steps {
+                    withDockerRegistry([ credentialsId: "gworkx-dockerhub", url: "" ]) {
+                        sh "docker push gworkx/img:php-$BUILD_NUMBER"
+                    }
+              }
+        }
+    }
+}
