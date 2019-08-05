@@ -13,20 +13,19 @@ pipeline {
         stage('Build & Tag The Image') {
             steps {
                 echo "Build & Tag the Image"
-                echo "docker image build -f ../Dockerfile.debian.php -t \"gworkx/img:php-${GIT_TAG_NAME}\"../."
-                //docker image build -f ../Dockerfile.debian.php -t "gworkx/img:php-${GIT_TAG_NAME}"../.
+                sh"""
+                    printenv
+                """
+               // docker image build -f ../Dockerfile.debian.php -t "gworkx/img:php-${GIT_TAG_NAME}"../.
             }
         }
 
         stage('Publish') {
-              when {
-                branch 'master'
-              }
               steps {
                     echo "Publish The Image"
-                   // withDockerRegistry([ credentialsId: "gworkx-dockerhub", url: "" ]) {
-                   //     sh "docker push gworkx/img:php-${GIT_TAG_NAME}"
-                   // }
+              //      withDockerRegistry([ credentialsId: "gworkx-dockerhub", url: "" ]) {
+              //          sh "docker push gworkx/img:php-${GIT_TAG_NAME}"
+              //      }
               }
         }
     }
