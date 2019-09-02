@@ -13,6 +13,7 @@ pipeline {
         stage('Build & Tag The Image') {
             steps {
                 echo "Build & Tag the Image"
+                sh "printenv"
                 sh "docker image build -f Dockerfile.debian.php -t gworkx/img:php-${TAG_NAME} . "
                 sh "docker image build -f Dockerfile.debian.php -t gworkx/img:php-LATEST . "
             }
