@@ -22,6 +22,7 @@ pipeline {
                     echo "Publish The Image"
                     withDockerRegistry([ credentialsId: "gworkx-dockerhub", url: "" ]) {
                         sh "docker push gworkx/img:php-${TAG_NAME}"
+                        sh "docker push gworkx/img:php-LATEST"
                     }
               }
         }
