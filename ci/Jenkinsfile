@@ -14,6 +14,7 @@ pipeline {
             steps {
                 echo "Build & Tag the Image"
                 sh "docker image build -f Dockerfile.debian.php -t gworkx/img:php-${TAG_NAME} . "
+                sh "docker image build -f Dockerfile.debian.php -t gworkx/img:php-LATEST . "
             }
         }
 
