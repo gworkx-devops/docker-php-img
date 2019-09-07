@@ -1,17 +1,22 @@
 FROM debian:stretch-slim
 
-# set environment variable
+# set environment variables
 #
 ENV DEBIAN_FRONTEND noninteractive
 
-ARG VERSION="php7gwi"
+# set image variables
+#
+ARG VERSION="php-latest"
+ARG PHP_VER="7.3"
+ARG GEO_CITY_DB_URL="https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz"
+ARG GEO_COUNTRY_DB_URL="https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz"
 
 # set maintenance info
 #
 LABEL dev.gworkx.tech.version="v1.1"
 LABEL vendor="Gelwa Workx"
 LABEL maintainer="gelwa.workx@gmail.com"
-LABEL dev.gworkx.tech.release-date="2019-08-04"
+LABEL dev.gworkx.tech.release-date="2019-09-06"
 LABEL dev.gworkx.tech.version.is-production="$VERSION"
 
 # set debian packages repos
@@ -24,28 +29,22 @@ RUN set -x \
     && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list \
     && apt-get update -y && apt-get upgrade -y \
     && apt-get install -y apt-utils build-essential ssmtp curl unzip vim \
-    php7.3 php7.3-cli php7.3-common php7.3-mysql php7.3-pgsql php7.3-sqlite3 \
-    php7.3-mbstring php7.3-intl php7.3-geoip php7.3-apcu php7.3-memcached php7.3-opcache \
-    php7.3-imap php7.3-bz2 php7.3-ldap php7.3-readline php7.3-redis php7.3-ssh2 php7.3-soap \
-    php7.3-phar php7.3-xml php7.3-xmlrpc php7.3-xsl \
-    php7.3-imagick php7.3-gd php7.3-json php7.3-curl php7.3-zip
+    php"$PHP_VER" php"$PHP_VER"-cli php"$PHP_VER"-common php"$PHP_VER"-mysql php"$PHP_VER"-pgsql php"$PHP_VER"-sqlite3 \
+    php"$PHP_VER"-mbstring php"$PHP_VER"-intl php"$PHP_VER"-geoip php"$PHP_VER"-apcu php"$PHP_VER"-memcached \
+    php"$PHP_VER"-opcache php"$PHP_VER"-imap php"$PHP_VER"-bz2 php"$PHP_VER"-ldap php"$PHP_VER"-readline \
+    php"$PHP_VER"-redis php"$PHP_VER"-ssh2 php"$PHP_VER"-soap php"$PHP_VER"-phar php"$PHP_VER"-xml php"$PHP_VER"-xmlrpc \
+    php"$PHP_VER"-xsl php"$PHP_VER"-imagick php"$PHP_VER"-gd php"$PHP_VER"-json php"$PHP_VER"-curl php"$PHP_VER"-zip
 
 # clean up APT when done
 #
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# add GEOIP databases
-#
-#ADD https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
-#RUN gunzip /usr/share/GeoIP/GeoLiteCity.dat.gz && chmod +r /usr/share/GeoIP/GeoLiteCity.dat \
-#    && ln -s /usr/share/GeoIP/GeoLiteCity.dat /usr/share/GeoIP/GeoIPCity.dat
-
 # setup runtime php
 #
 ADD ./image.conf.d/php.ini /etc/php/7.3/apache2/php.ini
 ADD ./image.conf.d/php-ssmtp.ini /etc/php/7.3/mods-available/ssmtp.ini
-RUN cd /etc/php/7.3/apache2/conf.d && ln -s /etc/php/7.3/mods-available/ssmtp.ini 20-ssmtp.ini
-RUN cd /etc/php/7.3/cli/conf.d && ln -s /etc/php/7.3/mods-available/ssmtp.ini 20-ssmtp.ini
+RUN cd /etc/php/"$PHP_VER"/apache2/conf.d && ln -s /etc/php/"$PHP_VER"/mods-available/ssmtp.ini 20-ssmtp.ini
+RUN cd /etc/php/"$PHP_VER"/cli/conf.d && ln -s /etc/php/"$PHP_VER"/mods-available/ssmtp.ini 20-ssmtp.ini
 
 #
 # add PHP composer
@@ -58,16 +57,26 @@ RUN composer require --dev phpunit/phpunit:"^5.7|^6.0"
 # Install GEOIP databases
 RUN composer require geoip2/geoip2:~2.0
 
+# add GEOIP Country and City Database
+RUN mkdir -p /usr/local/share/GeoIP/
+RUN set -x \
+    && wget -O /tmp/GeoLite2-City.tar.gz "$GEO_CITY_DB_URL" \
+    && tar xzvf /tmp/GeoLite2-City.tar.gz -C /tmp/ \
+    && mv /tmp/GeoLite2-City_20190903/GeoLite2-City.mmdb /usr/local/share/GeoIP/GeoLite2-City.mmdb \
+    && rm -rf /tmp/*
+
+RUN set -x \
+    && wget -O /tmp/GeoLite2-Country.tar.gz "$GEO_COUNTRY_DB_URL" \
+    && tar xzvf /tmp/GeoLite2-Country.tar.gz -C /tmp/ \
+    && mv /tmp/GeoLite2-Country_20190903/GeoLite2-Country.mmdb /usr/local/share/GeoIP/GeoLite2-Country.mmdb \
+    && rm -rf /tmp/* \
+    && ls -al /usr/local/share/GeoIP
+
 # setup runtime apache server
-#
-#ADD ./entrypoint.sh /usr/local/bin/init.sh
-#RUN chmod +x /usr/local/bin/init.sh
-#
 ADD ./image.conf.d/apache2.conf /etc/apache2/apache2.conf
 RUN a2enmod rewrite && a2enmod deflate
 
 # post setup
 #
 EXPOSE 80
-#ENTRYPOINT ["/usr/local/bin/init.sh"]
 ENTRYPOINT ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
