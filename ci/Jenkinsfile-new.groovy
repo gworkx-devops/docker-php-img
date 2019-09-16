@@ -44,7 +44,6 @@ pipeline {
                             echo "${selectRepo}"
                             git clone ${repoURI} checkout-code
                             ls -al ./checkout-code
-                            rsync -Phavz ./checkout-code/source-code/ ./source-code/
                         """
                     }
                 }
