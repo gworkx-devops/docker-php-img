@@ -21,18 +21,20 @@ pipeline {
                 """
                 script {
                     echo 'Select Repo To Build An Image >>'
+                    def repoURI
                     def selectRepo = input(id: 'selectRepo', message: 'Select Repo To Build',
                         parameters: [
                             [$class: 'ChoiceParameterDefinition', choices:['php','kitabu', 'wines', 'kisoda'], name: 'optsRepo']
                         ])
                     IMAGE_TO_DEPLOY = "${selectRepo}"
-                    println "Building & Deploying :${IMAGE_TO_DEPLOY} "
+                    println "Building & Deploying: ${IMAGE_TO_DEPLOY} "
+
                     // we do not want to do anything if php - we are in its repo
                     if (selectRepo != 'php') {
                         if (selectRepo == 'kitabu') {
-                            def repoURI = 'git@bitbucket.org:irinroy/' + "${selectRepo}" + '.git'
+                            repoURI = 'git@bitbucket.org:irinroy/' + "${selectRepo}" + '.git'
                         } else {
-                            def repoURI = 'git@bitbucket.org:gworkx/' + "${selectRepo}" + '.git'
+                            repoURI = 'git@bitbucket.org:gworkx/' + "${selectRepo}" + '.git'
                         }
                         if (fileExists('./checkout-code')) {
                             sh"""
