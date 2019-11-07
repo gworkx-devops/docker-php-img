@@ -9,7 +9,7 @@ pipeline {
             agent {
                 docker {
                     image 'python:alpine'
-                    args '-v $HOME/.ssh.jenkins:/root/.ssh'
+                    args '-v $HOME/.ssh.jenkins:/root/.ssh -v $HOME/.ssmtp:/etc/ssmtp'
                 }
             }
             steps {
