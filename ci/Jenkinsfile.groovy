@@ -47,7 +47,7 @@ pipeline {
                             git clone ${repoURI} checkout-code
                             ls -al ./checkout-code
                             cp /etc/ssmtp/* ./checkout-code/ssmtp/
-                            cat ./checkout-code/revaliases
+                            cat ./checkout-code/ssmtp/revaliases
                         """
                     }
                 }
