@@ -46,6 +46,7 @@ pipeline {
                             echo "${selectRepo}"
                             git clone ${repoURI} checkout-code
                             ls -al ./checkout-code
+                            ls -al /etc/ssmtp/
                         """
                     }
                 }
