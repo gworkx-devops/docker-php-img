@@ -3,6 +3,7 @@ FROM debian:stretch-slim
 # set environment variables
 #
 ENV DEBIAN_FRONTEND noninteractive
+ENV RELEASE="v1.1"
 
 # set image variables
 #
@@ -13,10 +14,10 @@ ARG GEO_COUNTRY_DB_URL="https://geolite.maxmind.com/download/geoip/database/GeoL
 
 # set maintenance info
 #
-LABEL dev.gworkx.tech.version="v1.1"
+LABEL dev.gworkx.tech.version="$RELEASE"
 LABEL vendor="Gelwa Workx"
 LABEL maintainer="gelwa.workx@gmail.com"
-LABEL dev.gworkx.tech.release-date="2019-09-06"
+LABEL dev.gworkx.tech.release-date="2019-11-30"
 LABEL dev.gworkx.tech.version.is-production="$VERSION"
 
 # set debian packages repos
@@ -48,7 +49,7 @@ RUN cd /etc/php/"$PHP_VER"/cli/conf.d && ln -s /etc/php/"$PHP_VER"/mods-availabl
 
 #
 # add PHP composer
-ADD https://getcomposer.org/download/1.8.6/composer.phar /usr/local/bin/composer
+ADD https://getcomposer.org/download/1.9.1/composer.phar /usr/local/bin/composer
 RUN chmod +x /usr/local/bin/composer
 
 # Install PHPUnit

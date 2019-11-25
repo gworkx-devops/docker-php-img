@@ -24,16 +24,17 @@ pipeline {
                     def repoURI
                     def selectRepo = input(id: 'selectRepo', message: 'Select Repo To Build',
                         parameters: [
-                            [$class: 'ChoiceParameterDefinition', choices:['php','kitabu', 'wines', 'kisoda'], name: 'optsRepo']
+                            [$class: 'ChoiceParameterDefinition', choices:['workshop-app-php','workshop-app-cake'], name: 'optsRepo']
                         ])
-                    IMAGE_TO_DEPLOY = "${selectRepo}"
+                    if (selectRepo == 'workshop-app-php') {
+                        IMAGE_TO_DEPLOY = "php"
+                    }else{
+                        IMAGE_TO_DEPLOY = "cake"
+                    }
                     println "Building & Deploying: ${IMAGE_TO_DEPLOY} "
 
-                    // we do not want to do anything if php - we are in its repo
-                    if (selectRepo != 'php') {
-                        if (selectRepo == 'kitabu') {
-                            repoURI = 'git@bitbucket.org:irinroy/' + "${selectRepo}" + '.git'
-                        } else {
+                    // we do not want to do anything with app-cake
+                    if (selectRepo == 'workshop-app-php') {
                             repoURI = 'git@bitbucket.org:gworkx/' + "${selectRepo}" + '.git'
                         }
                         if (fileExists('./checkout-code')) {
@@ -64,11 +65,11 @@ pipeline {
             steps {
                 script {
                     if (IMAGE_TO_DEPLOY == 'php') {
-                        sh "docker image build -f Dockerfile.debian.php -t gworkx/img:php-${TAG_NAME} . "
-                        sh "docker image build -f Dockerfile.debian.php -t gworkx/img:php-latest . "
+                        sh "docker image build -f Dockerfile.debian.php -t gworkx/img:php-workshop-${TAG_NAME} . "
+                        sh "docker image build -f Dockerfile.debian.php -t gworkx/img:php-workshop-latest . "
                     } else {
                         echo 'Build The Image >>'
-                        sh "docker image build --no-cache -t gworkx/img:${IMAGE_TO_DEPLOY}-latest -f Dockerfile.cake ."
+                        sh "docker image build --no-cache -t gworkx/img:${IMAGE_TO_DEPLOY}-workshop-latest -f Dockerfile.cake ."
                     }
                 }
             }
@@ -91,7 +92,7 @@ pipeline {
                     }
 
                     withDockerRegistry([ credentialsId: "gworkx-dockerhub", url: "" ]) {
-                        sh "docker push gworkx/img:${IMAGE_TO_DEPLOY}-latest"
+                        sh "docker push gworkx/img:${IMAGE_TO_DEPLOY}-workshop-latest"
                     }
                 }
             }

@@ -1,17 +1,17 @@
 FROM httpd:alpine
 
-# set environment variable
+# set image and environmental variables
 #
-ARG VERSION="php7gwi-ap"
+ENV RELEASE="v1.0"
+ARG VERSION="php-latest"
 
 # set maintenance info
 #
-LABEL dev.gworkx.tech.version="1.0-beta"
+LABEL dev.gworkx.tech.version="$RELEASE"
 LABEL vendor="Gelwa Workx"
 LABEL maintainer="gelwa.workx@gmail.com"
-LABEL dev.gworkx.tech.release-date="2018-04-15"
+LABEL dev.gworkx.tech.release-date="2019-11-30"
 LABEL dev.gworkx.tech.version.is-production="$VERSION"
-
 
 RUN set -x \
     && apk update && apk upgrade && apk add --no-cache build-base alpine-sdk bash \

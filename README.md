@@ -6,14 +6,27 @@
 #! /bin/bash
 
 #
-# baking the gworkx docker image
+# baking the php docker image
 #
-docker image build -t gworkx/img:php7.3 -f Dockerfile.debian.php .
+# docker image build -f Dockerfile.debian.php -t gworkx/img:php-workshop-7.3 .
+# docker image build --no-cache -f Dockerfile.debian.php -t gworkx/img:php-workshop-7.3 .
+
+# image baking - alpine
+#
+docker image build -f Dockerfile.alpine.php -t gworkx/img:php-workshop-alpine .
+
+# image baking - debian
+#
+docker image build -f Dockerfile.debian.php -t gworkx/img:php-workshop-debian .
+
+# image baking - CakePHP
+#
+docker image build -f Dockerfile.cake -t gworkx/img:php-workshop-cakephp .
 
 #
 # push the image to a remote registry
 #
-docker push gworkx/img:php7.3
+docker push gworkx/img:php-workshop-latest
 ```
 ## HOW TO SPIN A CONTAINER FROM THE IMAGE
 
@@ -25,10 +38,10 @@ docker push gworkx/img:php7.3
 #
 # start apache web server with a php module 
 #
-docker container run -d --name www-php-00 -p 8999:80 -v $PWD/source-code:/var/www/html gworkx/img:php7.3
+docker container run -d --name www-php-00 -p 8999:80 -v $PWD/source-code:/var/www/html gworkx/img:php-workshop-debian
 
 #
 # start apache web server with a php module in an interactive mode 
 #
-docker container run -it --name www-php-01 -p 8998:80 -v $PWD/source-code:/var/www/html gworkx/img:php7.3 bash
+docker container run -it --name www-php-01 -p 8998:80 -v $PWD/source-code:/var/www/html gworkx/img:php-workshop-debian bash
 ```
