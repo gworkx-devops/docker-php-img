@@ -67,3 +67,16 @@ docker container run -d --name www-php-01 -p 8999:80 -v $PWD/source-code:/var/ww
 #
 docker image build -f Dockerfile.app -t gworkx/img:php-workshop-cakephp .
 ```
+
+### 4) RUN DOCKERIZED APP
+
++ Working with a dockerized CakePHP application:
+
+```sh
+#! /bin/bash
+
+#
+# start apache web server with a bind mount CakePHP application in detached mode
+#
+docker container run -d --name www-php-02 -p 8080:80 -v $PWD/app-code:/var/www/html gworkx/img:php-workshop-debian
+```
