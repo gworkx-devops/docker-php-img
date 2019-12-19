@@ -1,8 +1,8 @@
-## HOW TO BUILD A DOCKER IMAGE
+### 1) HOW TO BUILD A DOCKER IMAGE
 
 + Building a PHP 7 image running on Apache HTTPD 2.4 webserver:
 
-### BASE IMAGE - ALPINE
+#### BASE IMAGE - ALPINE
 
 ```sh
 #! /bin/bash
@@ -18,7 +18,7 @@
 docker image build -f Dockerfile.alpine.php -t gworkx/img:php-workshop-alpine .
 ```
 
-### BASE IMAGE - DEBIAN/UBUNTU
+#### BASE IMAGE - DEBIAN/UBUNTU
 
 ```sh
 #! /bin/bash
@@ -28,7 +28,7 @@ docker image build -f Dockerfile.alpine.php -t gworkx/img:php-workshop-alpine .
 docker image build -f Dockerfile.debian.php -t gworkx/img:php-workshop-debian .
 ```
 
-### DOCKER IMAGE REGISTRY
+#### DOCKER IMAGE REGISTRY
 
 ```sh
 #! /bin/bash
@@ -38,7 +38,7 @@ docker image build -f Dockerfile.debian.php -t gworkx/img:php-workshop-debian .
 docker push gworkx/img:php-workshop-alpine
 ```
 
-### DOCKER CONTAINERS FROM THE IMAGE
+### 2) HOW TO RUN DOCKER CONTAINERS
 
 + To instantiate a docker container from the image execute the following steps:
 
@@ -56,7 +56,9 @@ docker container run -it --name www-php-00 -p 8998:80 -v $PWD/source-code:/var/w
 docker container run -d --name www-php-01 -p 8999:80 -v $PWD/source-code:/var/www/html:ro gworkx/img:php-workshop-debian
 ```
 
-### APP CONTAINERIZATION - CAKEPHP FRAMEWORK
+### 3) APP CONTAINERIZATION
+
++ To dockerize a CakePHP application:
 
 ```sh
 #! /bin/bash
