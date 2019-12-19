@@ -2,4 +2,4 @@
 
 # running CakePHP app 
 #
-docker stack deploy -c docker-compose.yml cake
+docker stack deploy -c docker-compose-stack.yml cake

@@ -1,0 +1,55 @@
+version: '3.7'
+
+services:
+  db-mysql:
+    image: mariadb:10.2
+    volumes:
+      - ./db-mysql:/var/lib/mysql
+      - ./db-archive:/docker-entrypoint-initdb.d:ro
+    environment:
+      - MYSQL_ROOT_PASSWORD=cakephp
+      - MYSQL_DATABASE=db_cakephp
+      - MYSQL_USER=cakephp
+      - MYSQL_PASSWORD=cakephp
+    networks:
+      - php-net
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  adminer:
+    image: adminer:latest
+    environment:
+      - ADMINER_DESIGN=lucas-sandery
+    ports:
+      - '9090:8080'
+    networks:
+      - php-net
+    depends_on:
+      - db-mysql
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  app:
+    image: gworkx/img:php-workshop-debian
+    hostname: cakephp
+    volumes:
+      - ./app-code:/var/www/html 
+    ports:
+      - '8080:80'
+    networks:
+      - php-net
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == manager]
+
+networks:
+  php-net:
+    driver: overlay

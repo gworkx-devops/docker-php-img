@@ -125,7 +125,7 @@ docker-compose -f docker-compose.yml down
 #
 # deploying docker microservices
 #
-docker stack deploy -c docker-compose.yml cake
+docker stack deploy -c docker-compose-stack.yml cake
 ```
 
 + Destroying dockerized microservice:
