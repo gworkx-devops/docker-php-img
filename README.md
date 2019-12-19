@@ -79,9 +79,19 @@ docker image build -f Dockerfile.app -t gworkx/img:php-workshop-cakephp .
 # start apache web server with a bind mount CakePHP application in detached mode
 #
 docker container run -d --name www-php-02 -p 8080:80 -v $PWD/app-code:/var/www/html gworkx/img:php-workshop-debian
+
+#
+# stopping apache web server with a bind mount CakePHP application
+#
+docker container stop www-php-02
+
+#
+# destroying a dockerized container
+#
+docker container rm -f www-php-02
 ```
 
-### 5) DEPLOY DOCKERIZED MICROSERVICES
+### 5) DEPLOY DOCKERIZED MICROSERVICES - DOCKER COMPOSE
 
 + Deploy dockerized CakePHP application as microservice:
 
@@ -103,4 +113,28 @@ docker-compose -f docker-compose.yml up -d
 # deploying docker microservices
 #
 docker-compose -f docker-compose.yml down
+```
+
+### 6) DEPLOY DOCKERIZED MICROSERVICES - DOCKER STACK
+
++ Deploy dockerized CakePHP application as microservice on a single node Swarm Cluster
+
+```sh
+#! /bin/bash
+
+#
+# deploying docker microservices
+#
+docker stack deploy -c docker-compose.yml cake
+```
+
++ Destroying dockerized microservice:
+
+```sh
+#! /bin/bash
+
+#
+# deploying docker microservices
+#
+docker stack rm cake
 ```
