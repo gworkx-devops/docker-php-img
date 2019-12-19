@@ -80,3 +80,27 @@ docker image build -f Dockerfile.app -t gworkx/img:php-workshop-cakephp .
 #
 docker container run -d --name www-php-02 -p 8080:80 -v $PWD/app-code:/var/www/html gworkx/img:php-workshop-debian
 ```
+
+### 5) DEPLOY DOCKERIZED MICROSERVICES
+
++ Deploy dockerized CakePHP application as microservice:
+
+```sh
+#! /bin/bash
+
+#
+# deploying docker microservices
+#
+docker-compose -f docker-compose.yml up -d
+```
+
++ Destroying dockerized microservice:
+
+```sh
+#! /bin/bash
+
+#
+# deploying docker microservices
+#
+docker-compose -f docker-compose.yml down
+```
