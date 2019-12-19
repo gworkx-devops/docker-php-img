@@ -1,2 +1,4 @@
 app-code/*
 source-code/*
+db-mysql/*
+db-archive/*
