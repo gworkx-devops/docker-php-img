@@ -24,18 +24,18 @@ pipeline {
                     def repoURI
                     def selectRepo = input(id: 'selectRepo', message: 'Select Repo To Build',
                         parameters: [
-                            [$class: 'ChoiceParameterDefinition', choices:['workshop-app-php','workshop-app-cake'], name: 'optsRepo']
+                            [$class: 'ChoiceParameterDefinition', choices:['docker-php-img','docker-python-img'], name: 'optsRepo']
                         ])
-                    if (selectRepo == 'workshop-app-php') {
+                    if (selectRepo == 'docker-php-img') {
                         IMAGE_TO_DEPLOY = "php"
                     }else{
-                        IMAGE_TO_DEPLOY = "cake"
+                        IMAGE_TO_DEPLOY = "python"
                     }
                     println "Building & Deploying: ${IMAGE_TO_DEPLOY} "
 
                     // we do not want to do anything with app-cake
-                    if (selectRepo == 'workshop-app-php') {
-                            repoURI = 'git@bitbucket.org:gworkx/' + "${selectRepo}" + '.git'
+                    if (selectRepo == 'docker-php-img') {
+                            repoURI = 'git@github:gworkx-devops/' + "${selectRepo}" + '.git'
                         }
                         if (fileExists('./checkout-code')) {
                             sh"""
@@ -66,10 +66,10 @@ pipeline {
                 script {
                     if (IMAGE_TO_DEPLOY == 'php') {
                         sh "docker image build -f Dockerfile.debian.php -t gworkx/img:php-workshop-${TAG_NAME} . "
-                        sh "docker image build -f Dockerfile.debian.php -t gworkx/img:php-workshop-latest . "
+                        sh "docker image build -f Dockerfile.debian.php -t gworkx/img:php-workshop-debian . "
                     } else {
                         echo 'Build The Image >>'
-                        sh "docker image build --no-cache -t gworkx/img:${IMAGE_TO_DEPLOY}-workshop-latest -f Dockerfile.cake ."
+                        sh "docker image build --no-cache -t gworkx/img:${IMAGE_TO_DEPLOY}-workshop-debian -f Dockerfile.cake ."
                     }
                 }
             }

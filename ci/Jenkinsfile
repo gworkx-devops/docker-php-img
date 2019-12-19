@@ -15,7 +15,7 @@ pipeline {
                 echo "Build & Tag the Image"
                 sh "printenv"
                 sh "docker image build -f Dockerfile.debian.php -t gworkx/img:php-${TAG_NAME} . "
-                sh "docker image build -f Dockerfile.debian.php -t gworkx/img:php-workshop-latest . "
+                sh "docker image build -f Dockerfile.debian.php -t gworkx/img:php-workshop-debian . "
             }
         }
 
@@ -24,7 +24,7 @@ pipeline {
                     echo "Publish The Image"
                     withDockerRegistry([ credentialsId: "gworkx-dockerhub", url: "" ]) {
                         sh "docker push gworkx/img:php-${TAG_NAME}"
-                        sh "docker push gworkx/img:php-workshop-latest"
+                        sh "docker push gworkx/img:php-workshop-debian"
                     }
               }
         }
