@@ -9,6 +9,7 @@ ENV RELEASE="v1.1"
 #
 ARG VERSION="php-latest"
 ARG PHP_VER="7.3"
+ARG IMAGE_CONFIGS="./image-conf-dir"
 ARG GEO_CITY_DB_URL="https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz"
 ARG GEO_COUNTRY_DB_URL="https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz"
 
@@ -20,9 +21,9 @@ LABEL maintainer="gelwa.workx@gmail.com"
 LABEL dev.gworkx.tech.release-date="2019-11-30"
 LABEL dev.gworkx.tech.version.is-production="$VERSION"
 
-# set debian packages repos
+# set debian packages repos list
 #
-ADD ./image.conf.d/contrib.list  /etc/apt/sources.list.d/contrib.list
+ADD "${IMAGE_CONFIGS}"/contrib.list  /etc/apt/sources.list.d/contrib.list
 
 RUN set -x \
     && apt-get update -y && apt-get install -y apt-transport-https lsb-release ca-certificates gnupg wget \
@@ -40,10 +41,11 @@ RUN set -x \
 #
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# setup runtime php
+# setup runtime php directives
 #
-ADD ./image.conf.d/php.ini /etc/php/7.3/apache2/php.ini
-ADD ./image.conf.d/php-ssmtp.ini /etc/php/7.3/mods-available/ssmtp.ini
+ADD "${IMAGE_CONFIGS}"/php.ini /etc/php/7.3/apache2/php.ini
+ADD "${IMAGE_CONFIGS}"/php-ssmtp.ini /etc/php/7.3/mods-available/ssmtp.ini
+
 RUN cd /etc/php/"$PHP_VER"/apache2/conf.d && ln -s /etc/php/"$PHP_VER"/mods-available/ssmtp.ini 20-ssmtp.ini
 RUN cd /etc/php/"$PHP_VER"/cli/conf.d && ln -s /etc/php/"$PHP_VER"/mods-available/ssmtp.ini 20-ssmtp.ini
 
@@ -74,7 +76,7 @@ RUN set -x \
     && ls -al /usr/local/share/GeoIP
 
 # setup runtime apache server
-ADD ./image.conf.d/apache2.conf /etc/apache2/apache2.conf
+ADD "${IMAGE_CONFIGS}"/apache2.conf /etc/apache2/apache2.conf
 RUN a2enmod rewrite && a2enmod deflate
 
 # post setup
