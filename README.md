@@ -46,9 +46,9 @@ docker push gworkx/img:php-workshop-alpine
 #! /bin/bash
 
 #
-# start apache web server with a php module in an interactive mode
+# start alpine container with php-cli in an interactive mode
 #
-docker container run -it --name www-php-00 -p 8998:80 -v $PWD/source-code:/var/www/html:ro gworkx/img:php-workshop-debian bash
+docker container run -it --name www-php-00 -v $PWD/source-code:/var/www/html:ro gworkx/img:php-workshop-alpine bash
 
 #
 # start apache web server with a php module in detached mode
