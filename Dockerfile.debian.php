@@ -10,8 +10,6 @@ ENV RELEASE="v1.1"
 ARG VERSION="php-latest"
 ARG PHP_VER="7.3"
 ARG IMAGE_CONFIGS="./image-conf-dir"
-ARG GEO_CITY_DB_URL="https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz"
-ARG GEO_COUNTRY_DB_URL="https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz"
 
 # set maintenance info
 #
@@ -56,24 +54,6 @@ RUN chmod +x /usr/local/bin/composer
 
 # Install PHPUnit
 RUN composer require --dev phpunit/phpunit:"^5.7|^6.0"
-
-# Install GEOIP databases
-RUN composer require geoip2/geoip2:~2.0
-
-# add GEOIP Country and City Database
-RUN mkdir -p /usr/local/share/GeoIP/
-RUN set -x \
-    && wget -O /tmp/GeoLite2-City.tar.gz "$GEO_CITY_DB_URL" \
-    && tar xzvf /tmp/GeoLite2-City.tar.gz -C /tmp/ \
-    && mv /tmp/GeoLite2-City_20190903/GeoLite2-City.mmdb /usr/local/share/GeoIP/GeoLite2-City.mmdb \
-    && rm -rf /tmp/*
-
-RUN set -x \
-    && wget -O /tmp/GeoLite2-Country.tar.gz "$GEO_COUNTRY_DB_URL" \
-    && tar xzvf /tmp/GeoLite2-Country.tar.gz -C /tmp/ \
-    && mv /tmp/GeoLite2-Country_20190903/GeoLite2-Country.mmdb /usr/local/share/GeoIP/GeoLite2-Country.mmdb \
-    && rm -rf /tmp/* \
-    && ls -al /usr/local/share/GeoIP
 
 # setup runtime apache server
 ADD "${IMAGE_CONFIGS}"/apache2.conf /etc/apache2/apache2.conf
