@@ -8,7 +8,7 @@
 #! /bin/bash
 
 #
-# methods to bake a php docker image
+# methods to bake a php docker image for immutable infrastructure
 #
 # docker image build -f Dockerfile.alpine.php -t gworkx/img:php-workshop-alpine .
 # docker image build --no-cache -f Dockerfile.alpine.php -t gworkx/img:php-workshop-alpine .
